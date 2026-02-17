@@ -25,18 +25,21 @@ SECRET_KEY = 'django-insecure-dsqk(&5tid4d2*2i99o0#u+l3=q=%xgkn=pj_23ixur$n$&g=k
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["192.168.29.184","127.0.0.1"]
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    # 'unfold',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'cbv',
+    "core",
 ]
 
 MIDDLEWARE = [
@@ -54,7 +57,7 @@ ROOT_URLCONF = 'tutorial.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -115,3 +118,149 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+
+
+# Unfold Admin Config 
+
+from django.templatetags.static import static
+from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
+
+
+UNFOLD = {
+    "SITE_HEADER": "Hello", 
+    "SITE_TITLE": "Hello",
+    "SITE_SUBHEADER": "Hello",
+    "SITE_DROPDOWN": [
+        {
+            "icon": "diamond",
+            "title": _("Dashboard"),
+            "link": "http://127.0.0.1:8000/admin/",
+        },
+        # ...
+    ],
+    "SITE_URL": "/",
+    # "SITE_ICON": lambda request: static("icon.svg"),  # both modes, optimise for 32px height
+    "SITE_ICON": {
+        "light": lambda request: static("logo/dollar.png"),  # light mode
+        "dark": lambda request: static("logo/dollar.png"),  # dark mode
+    },
+    # "SITE_LOGO": lambda request: static("logo.svg"),  # both modes, optimise for 32px height
+    "SITE_LOGO": {
+        "light": lambda request: static("logo/dollar.png"),  # light mode
+        "dark": lambda request: static("logo/dollar.png"),  # dark mode
+    },
+    "SITE_SYMBOL": "speed",  # symbol from icon set
+    "SITE_FAVICONS": [
+        {
+            "rel": "icon",
+            "sizes": "32x32",
+            "type": "image/svg+xml",
+            "href": lambda request: static("logo/dollar.png"),
+        },
+    ],
+    "SHOW_HISTORY": True, # show/hide "History" button, default: True
+    "SHOW_VIEW_ON_SITE": True, # show/hide "View on site" button, default: True
+    "SHOW_BACK_BUTTON": False, # show/hide "Back" button on changeform in header, default: False
+   "THEME": "dark", # Force theme: "dark" or "light". Will disable theme switcher
+    "ENVIRONMENT": "core.views.environment_callback", # environment name in header
+
+   "DASHBOARD_CALLBACK": "core.views.dashboard_callback",
+   
+    "BORDER_RADIUS": "6px",
+    "COLORS": {
+        "base": {
+            "50": "oklch(98.5% .002 247.839)",
+            "100": "oklch(96.7% .003 264.542)",
+            "200": "oklch(92.8% .006 264.531)",
+            "300": "oklch(87.2% .01 258.338)",
+            "400": "oklch(70.7% .022 261.325)",
+            "500": "oklch(55.1% .027 264.364)",
+            "600": "oklch(44.6% .03 256.802)",
+            "700": "oklch(37.3% .034 259.733)",
+            "800": "oklch(27.8% .033 256.848)",
+            "900": "oklch(21% .034 264.665)",
+            "950": "oklch(13% .028 261.692)",
+        },
+        "primary": {
+            "50": "oklch(97.7% .014 308.299)",
+            "100": "oklch(94.6% .033 307.174)",
+            "200": "oklch(90.2% .063 306.703)",
+            "300": "oklch(82.7% .119 306.383)",
+            "400": "oklch(71.4% .203 305.504)",
+            "500": "oklch(62.7% .265 303.9)",
+            "600": "oklch(55.8% .288 302.321)",
+            "700": "oklch(49.6% .265 301.924)",
+            "800": "oklch(43.8% .218 303.724)",
+            "900": "oklch(38.1% .176 304.987)",
+            "950": "oklch(29.1% .149 302.717)",
+        },
+        "font": {
+            "subtle-light": "var(--color-base-500)",  # text-base-500
+            "subtle-dark": "var(--color-base-400)",  # text-base-400
+            "default-light": "var(--color-base-600)",  # text-base-600
+            "default-dark": "var(--color-base-300)",  # text-base-300
+            "important-light": "var(--color-base-900)",  # text-base-900
+            "important-dark": "var(--color-base-100)",  # text-base-100
+        },
+    },
+   
+    "SIDEBAR": {
+        "show_search": True,  # Search in applications and models names
+        "command_search": True,  # Replace the sidebar search with the command search
+        "show_all_applications": True,  # Dropdown with all applications and models
+        "navigation": [
+            {
+                "title": _("Navigation"),
+                "separator": True,  # Top border
+                "collapsible": True,  # Collapsible group of links
+                "items": [
+                    {
+                        "title": _("Dashboard"),
+                        "icon": "dashboard",  # Supported icon set: https://fonts.google.com/icons
+                        "link": reverse_lazy("admin:index"),
+                        "badge": "core.views.badge_callback",
+                        "badge_variant": "info", # info, success, warning, primary, danger
+                        "badge_style": "solid", # background fill style
+                        "permission": lambda request: request.user.is_superuser,
+                    },
+                    {
+                        "title": _("Users"),
+                        "icon": "people",
+                        "link": reverse_lazy("admin:auth_user_changelist"),
+                    },
+
+
+                    {
+                        "title": _("Comments"),
+                        "icon": "Comment",  # Supported icon set: https://fonts.google.com/icons
+                        "link": reverse_lazy("admin:core_comment_changelist"),
+                        # "badge": "Admin Dashboard",
+                        "badge_variant": "info", # info, success, warning, primary, danger
+                        "badge_style": "solid", # background fill style
+                        "permission": lambda request: request.user.is_superuser,
+                    },
+                ],
+            },
+        ],
+    },
+     "TABS": [
+        {
+            "models": [
+                "app_label.model_name_in_lowercase",
+            ],
+            "items": [
+                {
+                    "title": _("Your custom title"),
+                    "link": reverse_lazy("admin:core_comment_changelist"),
+                    "permission": "core.views.permission_callback",
+                },
+            ],
+        },
+    ],
+
+}
