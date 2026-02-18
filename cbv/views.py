@@ -68,3 +68,63 @@ class TempHome2(TemplateView):
         print(context)
         print(kwargs)
         return context
+    
+
+# ========================================================================================================================
+#Redirect View in Django
+
+from django.views.generic import RedirectView,ListView
+
+class SuccessHome(RedirectView):
+    pattern_name = 'temp-home'
+    query_string = True
+
+class SuccessHome2(RedirectView):
+    pattern_name = 'temp-home2'
+
+    def get_redirect_url(self, *args, **kwargs):
+        print(kwargs)
+        kwargs['id'] = 22
+        return super().get_redirect_url(*args, **kwargs)
+    
+# ========================================================================================================================
+#Genric Display View in Django
+
+from django.views.generic.list import ListView
+from cbv.models import Student
+
+class Stdhome(View):
+    def get(self,request):
+        std = Student.objects.all()
+        return render(request,'cbv/genric-display-view/listview.html',{"stds":std})
+    
+class StdListView(ListView):
+    model = Student
+
+class StdListView1(ListView):
+    model = Student
+    template_name_suffix = '_all'
+
+class StdListView2(ListView):
+    model = Student
+    template_name = 'cbv/genric-display-view/studentlist.html'
+
+class StdListView3(ListView):
+    model = Student
+    template_name = 'cbv/genric-display-view/allstudentlist.html'
+    context_object_name = 'students'
+
+    def get_queryset(self):
+        return Student.objects.filter(address='HMT')
+    
+    def get_context_data(self,*args, **kwargs):
+        context = super().get_context_data(*args,**kwargs)
+        context['data']= Student.objects.filter(address='AMD')
+        return context
+    
+    def get_template_names(self):
+        if self.request.COOKIES.get('user') == 'asd':
+            template_name = 'cbv/genric-display-view/asd.html'
+        else:
+            template_name = self.template_name
+        return [template_name]

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List</title>
+
+    <style>
+        div.container{
+            border: 1px solid black;
+            display : flex;
+            padding: 1px 10px;
+            
+        }
+    </style>
+</head>
+<body>
+    <h2>List View In From Genric Display </h2>
+    <div >
+        {% for std in student_list %}
+        <div class='container'>
+
+            <h4>Name : {{std.name}} </h4> <hr>
+            <h4>Age : {{std.age}} </h4> <hr>
+            <h4>Address : {{std.address}} </h4>
+        </div>
+        {% endfor %}
+    </div>
+    
+</body>
+</html>
