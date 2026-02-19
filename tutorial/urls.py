@@ -21,4 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include("cbv.urls")),
     path('core/',include("core.urls")),
+    path('restframe_prac/',include('restframe_prac.urls')),
 ]
