@@ -10,4 +10,9 @@ urlpatterns = [
     path('delete-student/<int:id>/',views.delete_student,name='delete-student'),
 
     path("book/",views.get_all_book,name="get_all_book"),
+
+# ================================================================================================================================================
+# Class Base View
+
+    path('student/',views.StudentAPI.as_view(),name='student'),
 ]

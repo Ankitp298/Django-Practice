@@ -74,3 +74,58 @@ def get_all_book(request):
     book = Book.objects.all()
     serializer = BookSerializer(book,many= True)
     return Response({"status":200,"message":serializer.data})
+
+# ================================================================================================================================================
+# Class Base View
+from rest_framework.views import APIView
+
+class StudentAPI(APIView):
+    def get(self,request):
+        std = Student.objects.all()
+        serializer = StudentSerializer(std, many=True)
+        return Response({"status":200,"message":serializer.data})
+
+    def post(self,request):
+        data = request.data
+        serializer = StudentSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"status":200,"message":"Created Successfully!!!"})
+        return Response({"status":400,"message":"Invalid Data !!!","error":serializer.errors})
+
+    def put(self,request):
+        try:
+            id = request.GET.get('id')
+            std = Student.objects.get(id = id)
+            serializer = StudentSerializer(std,data = request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({"status":200,"message":"Updated Successfully !!!"})
+            return Response({'status':400,"message":"Somthing went wrong !!!","error": serializer.errors})
+        except Exception as e:
+            print(e)
+            return Response({"status":400,"message":str(e)})
+
+    def patch(self,request):
+        try:
+            id = request.GET.get('id')
+            std = Student.objects.get(id=id)
+            serializer = StudentSerializer(std,data = request.data,partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({"status":200,"message":"Updated Successfully !!!"})
+            return Response({"status":400,"message":"Somthing went Wrong !!","error":serializer.errors})
+        
+        except Exception as e:
+            print(e)
+            return Response({"status":404,"message":"Invalid !!!!","error":str(e)})
+
+    def delete(self,request):
+        try:
+            id = request.GET.get('id')
+            std = Student.objects.get(id=id)
+            std.delete()
+            return Response({"status":200,"message":"Deleted Successfully !!!"})
+        except Exception as e:
+            print(e)
+            return Response({"status":400,"message":"Invalid !!!","error":str(e)})
