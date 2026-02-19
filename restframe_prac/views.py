@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from restframe_prac.models import Student
-from restframe_prac.serializers import StudentSerializer
+from restframe_prac.models import *
+from restframe_prac.serializers import *
 # Create your views here.
 
 @api_view()
@@ -68,3 +68,9 @@ def delete_student(request,id):
         print(e)
         return Response({"error":e})
     
+
+@api_view()
+def get_all_book(request):
+    book = Book.objects.all()
+    serializer = BookSerializer(book,many= True)
+    return Response({"status":200,"message":serializer.data})
