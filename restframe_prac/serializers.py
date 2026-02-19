@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from restframe_prac.models import Student,Category,Book
+from django.contrib.auth.models import User
 
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -32,3 +33,14 @@ class BookSerializer(serializers.ModelSerializer):
         model = Book
         fields = "__all__"
         # depth = 1       #use when just want to all the data fields from category like :- id,name etc "__all__" all fields
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username','password']
+
+    def create(self, validated_data):
+        user = User.objects.create(username = validated_data['username'])
+        user.set_password(validated_data['password'])
+        user.save()
+        return user

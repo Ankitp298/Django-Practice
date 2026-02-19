@@ -15,4 +15,5 @@ urlpatterns = [
 # Class Base View
 
     path('student/',views.StudentAPI.as_view(),name='student'),
+    path('register/',views.Register.as_view(),name='register'),
 ]

@@ -3,6 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from restframe_prac.models import *
 from restframe_prac.serializers import *
+from rest_framework.authtoken.models import Token
 # Create your views here.
 
 @api_view()
@@ -78,8 +79,12 @@ def get_all_book(request):
 # ================================================================================================================================================
 # Class Base View
 from rest_framework.views import APIView
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 class StudentAPI(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     def get(self,request):
         std = Student.objects.all()
         serializer = StudentSerializer(std, many=True)
@@ -129,3 +134,15 @@ class StudentAPI(APIView):
         except Exception as e:
             print(e)
             return Response({"status":400,"message":"Invalid !!!","error":str(e)})
+
+class Register(APIView):
+    def post(self,request):
+        serializer = UserSerializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            user =User.objects.get(username = serializer.data['username'])
+            print("User name :: ",user)
+            token , created = Token.objects.get_or_create(user=user)
+            print(token)
+            return Response({"status":200,'payload':serializer.data,'token':str(token),'message':"Successfully Register!!"})
+        return Response({"status":400,'message':"Invalid Data !!!","error": serializer.errors})
