@@ -146,3 +146,34 @@ class Register(APIView):
             print(token)
             return Response({"status":200,'payload':serializer.data,'token':str(token),'message':"Successfully Register!!"})
         return Response({"status":400,'message':"Invalid Data !!!","error": serializer.errors})
+
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.tokens import RefreshToken
+
+class BookAPI(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self,request):
+        book = Book.objects.all()
+        serializer = BookSerializer(book,many =True)
+        return Response({"status":200,"message":serializer.data})
+    
+class JWTRegister(APIView):
+    def post(self,request):
+        serializer = UserSerializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            user =User.objects.get(username = serializer.data['username'])
+            print("User name :: ",user)
+            # token , created = Token.objects.get_or_create(user=user)
+            refresh = RefreshToken.for_user(user)
+            print(refresh)
+            return Response({"status":200,
+                             'payload':serializer.data,
+                             'refresh': str(refresh),
+                             'access': str(refresh.access_token),
+                             'message':"Successfully Register!!"})
+        
+        return Response({"status":400,'message':"Invalid Data !!!","error": serializer.errors})

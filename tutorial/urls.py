@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from rest_framework.authtoken import views
+from rest_framework_simplejwt import views as jwtvviews
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,4 +25,7 @@ urlpatterns = [
     path('core/',include("core.urls")),
     path('restframe_prac/',include('restframe_prac.urls')),
     path('api-token-auth/',views.obtain_auth_token), # for the Token
+    # JWT Token 
+    path('api/token/',jwtvviews.TokenObtainPairView.as_view()),
+    path("api/token/refresh/", jwtvviews.TokenRefreshView.as_view()),
 ]

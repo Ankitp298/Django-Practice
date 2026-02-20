@@ -16,4 +16,7 @@ urlpatterns = [
 
     path('student/',views.StudentAPI.as_view(),name='student'),
     path('register/',views.Register.as_view(),name='register'),
+
+    path("booklist/",views.BookAPI.as_view(),name="booklist"),
+    path("jwtregister/", views.JWTRegister.as_view(), name="jwtregister"),
 ]
