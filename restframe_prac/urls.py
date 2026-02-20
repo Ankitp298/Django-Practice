@@ -19,4 +19,11 @@ urlpatterns = [
 
     path("booklist/",views.BookAPI.as_view(),name="booklist"),
     path("jwtregister/", views.JWTRegister.as_view(), name="jwtregister"),
+
+# ================================================================================================================================================
+# Genric - Class Base View
+
+    path('studentgenric/',views.StudentGenric.as_view(),name='student-genric'),
+    path('studentmodified/<int:id>/',views.StudentModified.as_view(),name='student-modified'),
+
 ]

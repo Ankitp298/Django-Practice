@@ -177,3 +177,17 @@ class JWTRegister(APIView):
                              'message':"Successfully Register!!"})
         
         return Response({"status":400,'message':"Invalid Data !!!","error": serializer.errors})
+
+
+# ================================================================================================================================================
+# Genriac - Class Base View
+from rest_framework.generics import ListAPIView,CreateAPIView,ListCreateAPIView,UpdateAPIView,DestroyAPIView
+
+class StudentGenric(ListCreateAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+class StudentModified(UpdateAPIView,DestroyAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+    lookup_field = 'id'
